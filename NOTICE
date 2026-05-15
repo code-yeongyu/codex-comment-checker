@@ -1,0 +1,7 @@
+codex-comment-checker
+
+This package ports the pi-comment-checker hook into a Codex plugin repository.
+
+The plugin targets Codex plugin manifests, plugin-bundled lifecycle hooks, and
+MCP server discovery. The checker engine is provided by
+@code-yeongyu/comment-checker.

@@ -1,0 +1,9 @@
+{
+	"mcpServers": {
+		"codex-comment-checker": {
+			"command": "node",
+			"args": ["./dist/cli.js", "mcp"],
+			"cwd": "."
+		}
+	}
+}
