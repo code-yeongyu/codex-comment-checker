@@ -7,17 +7,12 @@ export type ImageContent = {
     data: string;
     mimeType: string;
 };
-export type CheckerToolName = "Write" | "Edit" | "MultiEdit";
-export type CheckerEdit = {
-    old_string: string;
-    new_string: string;
-};
+export type CheckerToolName = "Write" | "Edit";
 export type CheckerToolInput = {
     file_path: string;
     content?: string;
     old_string?: string;
     new_string?: string;
-    edits?: CheckerEdit[];
 };
 export type CommentCheckRequest = {
     sourceToolName: string;

@@ -1,7 +1,7 @@
 {
 	"name": "codex-comment-checker",
-	"version": "0.1.0",
-	"description": "Run comment-checker after Codex file edits and expose a comment_check MCP tool.",
+	"version": "0.1.1",
+	"description": "Run comment-checker after Codex apply_patch edits.",
 	"author": {
 		"name": "Yeongyu Kim",
 		"email": "yeongyu@users.noreply.github.com",
@@ -10,24 +10,23 @@
 	"homepage": "https://github.com/code-yeongyu/codex-comment-checker",
 	"repository": "https://github.com/code-yeongyu/codex-comment-checker",
 	"license": "MIT",
-	"keywords": ["codex", "codex-plugin", "comment-checker", "mcp", "hooks", "typescript"],
+	"keywords": ["codex", "codex-plugin", "comment-checker", "hooks", "typescript"],
 	"skills": "./skills/",
 	"hooks": "./hooks/hooks.json",
-	"mcpServers": "./.mcp.json",
 	"interface": {
 		"displayName": "Codex Comment Checker",
-		"shortDescription": "Checks comments after file edits",
-		"longDescription": "Codex Comment Checker runs the native comment-checker after apply_patch and other edit-style tool calls, feeds warnings back to Codex through PostToolUse hook feedback, and exposes a comment_check MCP tool for explicit checks.",
+		"shortDescription": "Checks comments after apply_patch",
+		"longDescription": "Codex Comment Checker runs the native comment-checker after successful apply_patch tool calls and feeds warnings back to Codex through PostToolUse hook feedback.",
 		"developerName": "Yeongyu Kim",
 		"category": "Developer Tools",
-		"capabilities": ["Hooks", "MCP Tools", "Code Review"],
+		"capabilities": ["Hooks", "Code Review"],
 		"websiteURL": "https://github.com/code-yeongyu/codex-comment-checker",
 		"privacyPolicyURL": "https://github.com/code-yeongyu/codex-comment-checker#privacy",
 		"termsOfServiceURL": "https://github.com/code-yeongyu/codex-comment-checker#license",
 		"defaultPrompt": [
-			"Check comments in the files I just edited.",
-			"Run comment_check on this diff before finalizing.",
-			"Flag unnecessary or misleading comments."
+			"Explain the comment warning from the apply_patch hook.",
+			"Fix the comment-checker warning from my last patch.",
+			"Show why the apply_patch comment check blocked."
 		],
 		"brandColor": "#2563EB",
 		"screenshots": []

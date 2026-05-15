@@ -1,7 +1,7 @@
 {
 	"name": "@code-yeongyu/codex-comment-checker",
-	"version": "0.1.0",
-	"description": "Codex plugin that runs comment-checker after file edits and exposes a comment-check MCP tool.",
+	"version": "0.1.1",
+	"description": "Codex plugin that runs comment-checker after apply_patch edits.",
 	"type": "module",
 	"license": "MIT",
 	"homepage": "https://github.com/code-yeongyu/codex-comment-checker",
@@ -16,7 +16,6 @@
 		"codex",
 		"codex-plugin",
 		"comment-checker",
-		"mcp",
 		"hooks",
 		"typescript"
 	],
@@ -28,7 +27,6 @@
 		"hooks",
 		"skills",
 		".codex-plugin",
-		".mcp.json",
 		"LICENSE",
 		"NOTICE",
 		"README.md",

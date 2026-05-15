@@ -54,8 +54,8 @@ describe("extractCodexCommentCheckRequests", () => {
 	it("#given unsupported post tool event #when extracting #then returns no requests", () => {
 		const requests = extractCodexCommentCheckRequests(
 			postToolUseInput({
-				tool_name: "Bash",
-				tool_input: { command: "printf hi" },
+				tool_name: "Write",
+				tool_input: { file_path: "src/example.ts", content: "// hi\nconst value = 1;\n" },
 			}),
 		);
 

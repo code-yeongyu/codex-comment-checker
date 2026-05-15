@@ -18,15 +18,15 @@ Conventions for human contributors and AI agents working on this repository.
 - `npm run check` - type check, biome, and build.
 - `npm pack --dry-run` - release package smoke test.
 - `node dist/cli.js hook post-tool-use < fixture.json` - smoke-test the Codex hook.
-- `node dist/cli.js mcp` - run the MCP server over stdio.
 
 ## Constraints
 
-- No Bun APIs. Runtime is Node only because Codex launches plugin MCP servers and hooks with Node.
+- No Bun APIs. Runtime is Node only because Codex launches plugin hooks with Node.
 - Keep Codex `PostToolUse` hook behavior covered by tests.
-- Keep `write`, `edit`, `multiedit`, and `apply_patch` extraction covered by tests.
+- Keep `apply_patch` extraction covered by tests.
 - `apply_patch` must support Codex `tool_input.command`, raw patch text, and OMO-compatible metadata.
 - Hook output must use the stable Codex hook JSON contract.
+- Do not expose an MCP server or MCP tool from this plugin.
 
 ## Don'ts
 
