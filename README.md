@@ -12,7 +12,7 @@ Codex plugin that runs [`@code-yeongyu/comment-checker`](https://github.com/code
 | `write`, `edit`, `multi_edit`, or `multiedit` succeeds | maps the Codex payload to the native checker hook input |
 | non-edit tool succeeds | ignored |
 | checker exits `2` | returns Codex `PostToolUse` blocking feedback so the model fixes or explains the warning |
-| checker binary missing | emits no hook output |
+| checker binary missing or unavailable on the current platform | emits no hook output |
 | checker exits unexpectedly | leaves hook output unchanged |
 
 Deletes are ignored because they cannot introduce new comments.
@@ -28,7 +28,7 @@ The plugin ships:
 The hook command is:
 
 ```bash
-node "$PLUGIN_ROOT/dist/cli.js" hook post-tool-use
+node "${PLUGIN_ROOT}/dist/cli.js" hook post-tool-use
 ```
 
 No MCP server or `comment_check` tool is exposed.
@@ -72,13 +72,13 @@ enabled = true
 ## Branch Rules and Releases
 
 - `main` is protected by `.github/branch-ruleset.json`.
-- CI runs Node 20 and 22 on Ubuntu and macOS.
+- CI runs Node 20 and 22 on Ubuntu, macOS, and Windows.
 - Releases are GitHub Releases tagged as `v<semver>`.
 - Publishing runs from the `publish` workflow after a GitHub Release is published.
 
 ## Privacy
 
-This plugin runs locally. It sends hook input to the local `comment-checker` binary and does not call a network service by itself.
+This plugin runs locally. It sends hook input to the optional local `comment-checker` binary when available and does not call a network service by itself.
 
 ## License
 

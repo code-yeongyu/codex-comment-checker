@@ -6,6 +6,13 @@
 
 - Restore `write`, `edit`, `multi_edit`, and `multiedit` PostToolUse coverage alongside `apply_patch`.
 - Forward Codex `transcript_path` into native comment-checker hook input when available.
+- Add package smoke coverage for portable hook entrypoints.
+
+### Changed
+
+- Treat the native checker binary as an optional dependency for unsupported platforms.
+- Cap child process stdout/stderr captured from the native checker.
+- Run CI on Windows in addition to Ubuntu and macOS.
 
 ## [0.1.1] - 2026-05-15
 

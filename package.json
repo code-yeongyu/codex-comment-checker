@@ -3,6 +3,7 @@
 	"version": "0.1.1",
 	"description": "Codex plugin that runs comment-checker after edit-like PostToolUse hooks.",
 	"type": "module",
+	"packageManager": "npm@11.12.1",
 	"license": "MIT",
 	"homepage": "https://github.com/code-yeongyu/codex-comment-checker",
 	"repository": {
@@ -41,7 +42,7 @@
 		"lint:fix": "biome check --write .",
 		"check": "tsc --noEmit && biome check . && npm run build"
 	},
-	"dependencies": {
+	"optionalDependencies": {
 		"@code-yeongyu/comment-checker": "^0.7.0"
 	},
 	"devDependencies": {

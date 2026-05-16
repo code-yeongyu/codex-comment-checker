@@ -2,6 +2,7 @@ import { spawn } from "node:child_process";
 import { existsSync } from "node:fs";
 import { createRequire } from "node:module";
 import { dirname, join } from "node:path";
+export const MAX_PROCESS_OUTPUT_BYTES = 64 * 1024;
 export async function runCommentChecker(input, options = {}) {
     const binaryPath = options.binaryPath ?? (options.resolveBinary ? options.resolveBinary() : resolveCommentCheckerBinary());
     if (!binaryPath) {
@@ -64,30 +65,57 @@ function resolvePackageBinary(binaryName) {
         return undefined;
     }
 }
-function spawnProcess(command, args, stdin) {
+function appendOutput(output, chunk, maxOutputBytes) {
+    if (output.truncated)
+        return;
+    const remainingBytes = maxOutputBytes - output.bytes;
+    const chunkBytes = Buffer.byteLength(chunk, "utf8");
+    if (chunkBytes <= remainingBytes) {
+        output.text += chunk;
+        output.bytes += chunkBytes;
+        return;
+    }
+    if (remainingBytes > 0) {
+        output.text += Buffer.from(chunk, "utf8").subarray(0, remainingBytes).toString("utf8");
+        output.bytes += remainingBytes;
+    }
+    output.truncated = true;
+}
+function formatOutput(output, streamName, maxOutputBytes) {
+    if (!output.truncated)
+        return output.text;
+    return `${output.text}\n[${streamName} truncated after ${maxOutputBytes} bytes]`;
+}
+export function spawnProcess(command, args, stdin, maxOutputBytes = MAX_PROCESS_OUTPUT_BYTES) {
     return new Promise((resolve) => {
+        const outputByteLimit = Number.isFinite(maxOutputBytes) && maxOutputBytes > 0 ? Math.floor(maxOutputBytes) : 0;
         const proc = spawn(command, args, {
             stdio: ["pipe", "pipe", "pipe"],
         });
-        let stdout = "";
-        let stderr = "";
+        const stdout = { text: "", bytes: 0, truncated: false };
+        const stderr = { text: "", bytes: 0, truncated: false };
         proc.stdout.setEncoding("utf-8");
         proc.stderr.setEncoding("utf-8");
         proc.stdout.on("data", (chunk) => {
-            stdout += chunk;
+            appendOutput(stdout, chunk, outputByteLimit);
         });
         proc.stderr.on("data", (chunk) => {
-            stderr += chunk;
+            appendOutput(stderr, chunk, outputByteLimit);
         });
         proc.once("error", (error) => {
+            appendOutput(stderr, error.message, outputByteLimit);
             resolve({
                 exitCode: null,
-                stdout,
-                stderr: `${stderr}${error.message}`,
+                stdout: formatOutput(stdout, "stdout", outputByteLimit),
+                stderr: formatOutput(stderr, "stderr", outputByteLimit),
             });
         });
         proc.once("close", (exitCode) => {
-            resolve({ exitCode, stdout, stderr });
+            resolve({
+                exitCode,
+                stdout: formatOutput(stdout, "stdout", outputByteLimit),
+                stderr: formatOutput(stderr, "stderr", outputByteLimit),
+            });
         });
         proc.stdin.end(stdin);
     });

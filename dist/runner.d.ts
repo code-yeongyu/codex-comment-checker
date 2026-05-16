@@ -4,6 +4,7 @@ export type ProcessResult = {
     stdout: string;
     stderr: string;
 };
+export declare const MAX_PROCESS_OUTPUT_BYTES: number;
 export type ProcessExecutor = (command: string, args: string[], stdin: string) => Promise<ProcessResult>;
 export type RunCommentCheckerOptions = {
     binaryPath?: string;
@@ -22,4 +23,5 @@ export type CommentCheckerRunResult = {
 export type CommentCheckerRunner = (input: CommentCheckerHookInput) => Promise<CommentCheckerRunResult>;
 export declare function runCommentChecker(input: CommentCheckerHookInput, options?: RunCommentCheckerOptions): Promise<CommentCheckerRunResult>;
 export declare function resolveCommentCheckerBinary(): string | undefined;
+export declare function spawnProcess(command: string, args: string[], stdin: string, maxOutputBytes?: number): Promise<ProcessResult>;
 //# sourceMappingURL=runner.d.ts.map
