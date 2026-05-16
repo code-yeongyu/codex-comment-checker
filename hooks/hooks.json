@@ -2,7 +2,7 @@
 	"hooks": {
 		"PostToolUse": [
 			{
-				"matcher": "^apply_patch$",
+				"matcher": "^(apply_patch|write|Write|edit|Edit|multi_edit|multiedit|MultiEdit)$",
 				"hooks": [
 					{
 						"type": "command",

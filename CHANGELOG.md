@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- Restore `write`, `edit`, `multi_edit`, and `multiedit` PostToolUse coverage alongside `apply_patch`.
+- Forward Codex `transcript_path` into native comment-checker hook input when available.
+
 ## [0.1.1] - 2026-05-15
 
 ### Changed

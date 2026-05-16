@@ -54,12 +54,92 @@ describe("extractCodexCommentCheckRequests", () => {
 	it("#given unsupported post tool event #when extracting #then returns no requests", () => {
 		const requests = extractCodexCommentCheckRequests(
 			postToolUseInput({
-				tool_name: "Write",
+				tool_name: "read",
 				tool_input: { file_path: "src/example.ts", content: "// hi\nconst value = 1;\n" },
 			}),
 		);
 
 		expect(requests).toEqual([]);
+	});
+
+	it("#given codex write payload #when extracting #then returns write request", () => {
+		const requests = extractCodexCommentCheckRequests(
+			postToolUseInput({
+				tool_name: "write",
+				tool_input: {
+					file_path: "src/example.ts",
+					content: "// explains value\nconst value = 1;\n",
+				},
+			}),
+		);
+
+		expect(requests).toEqual([
+			{
+				sourceToolName: "write",
+				toolName: "Write",
+				filePath: "src/example.ts",
+				toolInput: {
+					file_path: "src/example.ts",
+					content: "// explains value\nconst value = 1;\n",
+				},
+			},
+		]);
+	});
+
+	it("#given codex edit payload #when extracting #then returns edit request", () => {
+		const requests = extractCodexCommentCheckRequests(
+			postToolUseInput({
+				tool_name: "edit",
+				tool_input: {
+					path: "src/example.ts",
+					oldString: "const value = 1;\n",
+					newString: "// explains value\nconst value = 2;\n",
+				},
+			}),
+		);
+
+		expect(requests).toEqual([
+			{
+				sourceToolName: "edit",
+				toolName: "Edit",
+				filePath: "src/example.ts",
+				toolInput: {
+					file_path: "src/example.ts",
+					old_string: "const value = 1;\n",
+					new_string: "// explains value\nconst value = 2;\n",
+				},
+			},
+		]);
+	});
+
+	it("#given codex multi_edit payload #when extracting #then returns multiedit request", () => {
+		const requests = extractCodexCommentCheckRequests(
+			postToolUseInput({
+				tool_name: "multi_edit",
+				tool_input: {
+					filePath: "src/example.ts",
+					edits: [
+						{ old_string: "const a = 1;\n", new_string: "// explains a\nconst a = 2;\n" },
+						{ oldString: "const b = 1;\n", newString: "// explains b\nconst b = 2;\n" },
+					],
+				},
+			}),
+		);
+
+		expect(requests).toEqual([
+			{
+				sourceToolName: "multi_edit",
+				toolName: "MultiEdit",
+				filePath: "src/example.ts",
+				toolInput: {
+					file_path: "src/example.ts",
+					edits: [
+						{ old_string: "const a = 1;\n", new_string: "// explains a\nconst a = 2;\n" },
+						{ old_string: "const b = 1;\n", new_string: "// explains b\nconst b = 2;\n" },
+					],
+				},
+			},
+		]);
 	});
 });
 
@@ -87,5 +167,57 @@ describe("runCommentCheckerPostToolUse", () => {
 		});
 
 		expect(output).toBe("");
+	});
+
+	it("#given transcript path #when hook runs #then forwards it to checker input", async () => {
+		let transcriptPath = "";
+
+		await runCommentCheckerPostToolUse(
+			postToolUseInput({
+				transcript_path: "/tmp/codex-comment-checker-transcript.jsonl",
+				tool_name: "write",
+				tool_input: {
+					file_path: "src/example.ts",
+					content: "// explains value\nconst value = 1;\n",
+				},
+			}),
+			{
+				run: async (input) => {
+					transcriptPath = input.transcript_path;
+					return {
+						status: "pass",
+						message: "",
+					};
+				},
+			},
+		);
+
+		expect(transcriptPath).toBe("/tmp/codex-comment-checker-transcript.jsonl");
+	});
+
+	it("#given null transcript path #when hook runs #then forwards empty string fallback", async () => {
+		let transcriptPath = "unset";
+
+		await runCommentCheckerPostToolUse(
+			postToolUseInput({
+				transcript_path: null,
+				tool_name: "write",
+				tool_input: {
+					file_path: "src/example.ts",
+					content: "// explains value\nconst value = 1;\n",
+				},
+			}),
+			{
+				run: async (input) => {
+					transcriptPath = input.transcript_path;
+					return {
+						status: "pass",
+						message: "",
+					};
+				},
+			},
+		);
+
+		expect(transcriptPath).toBe("");
 	});
 });

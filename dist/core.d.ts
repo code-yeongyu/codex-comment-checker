@@ -7,12 +7,17 @@ export type ImageContent = {
     data: string;
     mimeType: string;
 };
-export type CheckerToolName = "Write" | "Edit";
+export type CheckerToolName = "Write" | "Edit" | "MultiEdit";
+export type CheckerEdit = {
+    old_string: string;
+    new_string: string;
+};
 export type CheckerToolInput = {
     file_path: string;
     content?: string;
     old_string?: string;
     new_string?: string;
+    edits?: CheckerEdit[];
 };
 export type CommentCheckRequest = {
     sourceToolName: string;
@@ -40,6 +45,7 @@ export declare function extractCommentCheckRequests(event: ToolResultLike): Comm
 export declare function toHookInput(request: CommentCheckRequest, context: {
     sessionId: string;
     cwd: string;
+    transcriptPath?: string;
 }): CommentCheckerHookInput;
 export declare function isToolFailureOutput(text: string): boolean;
 export declare function parseApplyPatchRequests(patch: string, sourceToolName?: string): CommentCheckRequest[];

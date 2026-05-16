@@ -11,7 +11,11 @@ export async function runCommentCheckerPostToolUse(input, options = {}) {
     const runner = options.run ?? runCommentChecker;
     const warnings = [];
     for (const request of requests) {
-        const result = await runner(toHookInput(request, { sessionId: input.session_id, cwd: input.cwd }));
+        const result = await runner(toHookInput(request, {
+            sessionId: input.session_id,
+            cwd: input.cwd,
+            transcriptPath: input.transcript_path ?? undefined,
+        }));
         if (result.status === "missing" || result.status === "pass")
             continue;
         if (result.status === "error")

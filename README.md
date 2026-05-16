@@ -2,14 +2,15 @@
 
 [![ci](https://github.com/code-yeongyu/codex-comment-checker/actions/workflows/ci.yml/badge.svg)](https://github.com/code-yeongyu/codex-comment-checker/actions/workflows/ci.yml) [![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-Codex plugin that runs [`@code-yeongyu/comment-checker`](https://github.com/code-yeongyu/go-claude-code-comment-checker) after successful `apply_patch` tool calls.
+Codex plugin that runs [`@code-yeongyu/comment-checker`](https://github.com/code-yeongyu/go-claude-code-comment-checker) after successful edit-like `PostToolUse` hook calls.
 
 ## Behavior
 
 | Case | Result |
 |------|--------|
 | `apply_patch` succeeds | parses `tool_input.command` and checks added/updated files |
-| non-`apply_patch` edit tool succeeds | ignored |
+| `write`, `edit`, `multi_edit`, or `multiedit` succeeds | maps the Codex payload to the native checker hook input |
+| non-edit tool succeeds | ignored |
 | checker exits `2` | returns Codex `PostToolUse` blocking feedback so the model fixes or explains the warning |
 | checker binary missing | emits no hook output |
 | checker exits unexpectedly | leaves hook output unchanged |
@@ -57,9 +58,13 @@ codex plugin marketplace add /path/to/codex-plugins
 node /path/to/codex-plugins/scripts/install-local.mjs /path/to/codex-plugins
 ```
 
-If your local Codex build exposes plugin install commands, you can install from the UI or CLI instead. For older local builds, the marketplace installer builds and copies the plugin into `~/.codex/plugins/cache/<marketplace>/codex-comment-checker/0.1.0`, installs runtime dependencies there, and enables:
+If your local Codex build exposes plugin install commands, you can install from the UI or CLI instead. For older local builds, the marketplace installer builds and copies the plugin into `~/.codex/plugins/cache/<marketplace>/codex-comment-checker/0.1.1`, installs runtime dependencies there, and enables:
 
 ```toml
+[features]
+plugins = true
+plugin_hooks = true
+
 [plugins."codex-comment-checker@code-yeongyu-codex-plugins"]
 enabled = true
 ```

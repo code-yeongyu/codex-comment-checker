@@ -1,7 +1,7 @@
 {
 	"name": "codex-comment-checker",
 	"version": "0.1.1",
-	"description": "Run comment-checker after Codex apply_patch edits.",
+	"description": "Run comment-checker after Codex edit hooks.",
 	"author": {
 		"name": "Yeongyu Kim",
 		"email": "yeongyu@users.noreply.github.com",
@@ -15,8 +15,8 @@
 	"hooks": "./hooks/hooks.json",
 	"interface": {
 		"displayName": "Codex Comment Checker",
-		"shortDescription": "Checks comments after apply_patch",
-		"longDescription": "Codex Comment Checker runs the native comment-checker after successful apply_patch tool calls and feeds warnings back to Codex through PostToolUse hook feedback.",
+		"shortDescription": "Checks comments after edits",
+		"longDescription": "Codex Comment Checker runs the native comment-checker after successful edit-like PostToolUse hook calls and feeds warnings back to Codex through blocking hook feedback.",
 		"developerName": "Yeongyu Kim",
 		"category": "Developer Tools",
 		"capabilities": ["Hooks", "Code Review"],
@@ -24,9 +24,9 @@
 		"privacyPolicyURL": "https://github.com/code-yeongyu/codex-comment-checker#privacy",
 		"termsOfServiceURL": "https://github.com/code-yeongyu/codex-comment-checker#license",
 		"defaultPrompt": [
-			"Explain the comment warning from the apply_patch hook.",
+			"Explain the comment warning from the edit hook.",
 			"Fix the comment-checker warning from my last patch.",
-			"Show why the apply_patch comment check blocked."
+			"Show why the comment check blocked."
 		],
 		"brandColor": "#2563EB",
 		"screenshots": []

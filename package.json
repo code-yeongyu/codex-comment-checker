@@ -1,7 +1,7 @@
 {
 	"name": "@code-yeongyu/codex-comment-checker",
 	"version": "0.1.1",
-	"description": "Codex plugin that runs comment-checker after apply_patch edits.",
+	"description": "Codex plugin that runs comment-checker after edit-like PostToolUse hooks.",
 	"type": "module",
 	"license": "MIT",
 	"homepage": "https://github.com/code-yeongyu/codex-comment-checker",
