@@ -49,10 +49,26 @@ export async function runCommentChecker(input, options = {}) {
 }
 export function resolveCommentCheckerBinary() {
     const binaryName = process.platform === "win32" ? "comment-checker.exe" : "comment-checker";
+    const fromPackageApi = resolvePackageApiBinary();
+    if (fromPackageApi)
+        return fromPackageApi;
     const fromPackage = resolvePackageBinary(binaryName);
     if (fromPackage)
         return fromPackage;
     return undefined;
+}
+function resolvePackageApiBinary() {
+    try {
+        const require = createRequire(import.meta.url);
+        const packageExports = require("@code-yeongyu/comment-checker");
+        if (!isCommentCheckerPackage(packageExports))
+            return undefined;
+        const binaryPath = packageExports.getBinaryPath();
+        return existsSync(binaryPath) ? binaryPath : undefined;
+    }
+    catch {
+        return undefined;
+    }
 }
 function resolvePackageBinary(binaryName) {
     try {
@@ -64,6 +80,12 @@ function resolvePackageBinary(binaryName) {
     catch {
         return undefined;
     }
+}
+function isCommentCheckerPackage(value) {
+    return isRecord(value) && typeof value.getBinaryPath === "function";
+}
+function isRecord(value) {
+    return typeof value === "object" && value !== null;
 }
 function appendOutput(output, chunk, maxOutputBytes) {
     if (output.truncated)

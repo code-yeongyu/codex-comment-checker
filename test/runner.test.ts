@@ -1,6 +1,12 @@
+import { existsSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
-import { MAX_PROCESS_OUTPUT_BYTES, spawnProcess } from "../src/runner.js";
+import {
+	MAX_PROCESS_OUTPUT_BYTES,
+	resolveCommentCheckerBinary,
+	runCommentChecker,
+	spawnProcess,
+} from "../src/runner.js";
 
 describe("spawnProcess", () => {
 	it("#given noisy checker process #when output exceeds cap #then stderr is bounded", async () => {
@@ -19,5 +25,43 @@ describe("spawnProcess", () => {
 		expect(MAX_PROCESS_OUTPUT_BYTES).toBeGreaterThan(maxOutputBytes);
 		expect(result.exitCode).toBe(2);
 		expect(result.stderr).toBe(`${"x".repeat(maxOutputBytes)}\n[stderr truncated after 16 bytes]`);
+	});
+});
+
+describe("resolveCommentCheckerBinary", () => {
+	it("#given installed checker package #when resolving binary #then returns bundled vendor binary", () => {
+		// given / when
+		const binaryPath = resolveCommentCheckerBinary();
+
+		// then
+		expect(binaryPath).toBeDefined();
+		expect(binaryPath ?? "").toContain("vendor");
+		expect(binaryPath ?? "").toContain("comment-checker");
+		expect(existsSync(binaryPath ?? "")).toBe(true);
+	});
+});
+
+describe("runCommentChecker", () => {
+	it("#given missing checker binary #when runner starts #then returns missing result", async () => {
+		// given / when
+		const result = await runCommentChecker(
+			{
+				session_id: "session-1",
+				tool_name: "Write",
+				transcript_path: "",
+				cwd: "/repo",
+				hook_event_name: "PostToolUse",
+				tool_input: {
+					file_path: "src/example.ts",
+					content: "const value = 1;\n",
+				},
+			},
+			{
+				resolveBinary: () => undefined,
+			},
+		);
+
+		// then
+		expect(result.status).toBe("missing");
 	});
 });
