@@ -19,4 +19,5 @@ export type CodexHookOptions = {
 export declare function extractCodexCommentCheckRequests(input: CodexPostToolUseInput): CommentCheckRequest[];
 export declare function runCommentCheckerPostToolUse(input: CodexPostToolUseInput, options?: CodexHookOptions): Promise<string>;
 export declare function runCodexHookCli(): Promise<void>;
+export declare function parseCodexPostToolUseInput(input: string): CodexPostToolUseInput | undefined;
 //# sourceMappingURL=codex-hook.d.ts.map

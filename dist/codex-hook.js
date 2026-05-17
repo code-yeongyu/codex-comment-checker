@@ -36,14 +36,24 @@ export async function runCodexHookCli() {
     const input = await readStdin();
     if (input.trim().length === 0)
         return;
-    const parsed = JSON.parse(input);
-    if (!isCodexPostToolUseInput(parsed))
+    const parsed = parseCodexPostToolUseInput(input);
+    if (!parsed)
         return;
     const output = await runCommentCheckerPostToolUse(parsed);
     if (output.length > 0) {
         processStdout.write(output);
         processStdout.write("\n");
     }
+}
+export function parseCodexPostToolUseInput(input) {
+    let parsed;
+    try {
+        parsed = JSON.parse(input);
+    }
+    catch {
+        return undefined;
+    }
+    return isCodexPostToolUseInput(parsed) ? parsed : undefined;
 }
 function toToolResultLike(input) {
     return {
