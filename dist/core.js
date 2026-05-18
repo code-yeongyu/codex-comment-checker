@@ -52,13 +52,11 @@ function extractEditRequest(event) {
     const filePath = getString(event.input, ["filePath", "file_path", "path"]);
     const oldString = getString(event.input, ["oldString", "old_string"]);
     const newString = getString(event.input, ["newString", "new_string"]);
-    if (!filePath || (oldString === undefined && newString === undefined))
+    if (!filePath || oldString === undefined || newString === undefined)
         return [];
     const toolInput = { file_path: filePath };
-    if (oldString !== undefined)
-        toolInput.old_string = oldString;
-    if (newString !== undefined)
-        toolInput.new_string = newString;
+    toolInput.old_string = oldString;
+    toolInput.new_string = newString;
     return [
         {
             sourceToolName: event.toolName,

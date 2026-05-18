@@ -135,6 +135,7 @@ function isCodexPostToolUseInput(value: unknown): value is CodexPostToolUseInput
 		value.hook_event_name === "PostToolUse" &&
 		typeof value.session_id === "string" &&
 		typeof value.turn_id === "string" &&
+		(typeof value.transcript_path === "string" || value.transcript_path === null) &&
 		typeof value.cwd === "string" &&
 		typeof value.model === "string" &&
 		typeof value.permission_mode === "string" &&

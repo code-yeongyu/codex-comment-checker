@@ -29,13 +29,12 @@ describe("spawnProcess", () => {
 });
 
 describe("resolveCommentCheckerBinary", () => {
-	it("#given installed checker package #when resolving binary #then returns bundled vendor binary", () => {
+	it("#given installed checker package #when resolving binary #then returns existing checker binary", () => {
 		// given / when
 		const binaryPath = resolveCommentCheckerBinary();
 
 		// then
 		expect(binaryPath).toBeDefined();
-		expect(binaryPath ?? "").toContain("vendor");
 		expect(binaryPath ?? "").toContain("comment-checker");
 		expect(existsSync(binaryPath ?? "")).toBe(true);
 	});

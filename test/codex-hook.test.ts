@@ -145,6 +145,20 @@ describe("extractCodexCommentCheckRequests", () => {
 		]);
 	});
 
+	it("#given one-sided codex edit payload #when extracting #then returns no requests", () => {
+		const requests = extractCodexCommentCheckRequests(
+			postToolUseInput({
+				tool_name: "edit",
+				tool_input: {
+					path: "src/example.ts",
+					oldString: "const value = 1;\n",
+				},
+			}),
+		);
+
+		expect(requests).toEqual([]);
+	});
+
 	it("#given codex multi_edit payload #when extracting #then returns multiedit request", () => {
 		const requests = extractCodexCommentCheckRequests(
 			postToolUseInput({
@@ -274,6 +288,21 @@ describe("runCodexHookCli", () => {
 	it("#given non-object post-tool-use JSON #when hook CLI runs #then it no-ops without stderr", async () => {
 		// given
 		const input = '"break;"\n';
+
+		// when
+		const result = await runHookCli(input);
+
+		// then
+		expect(result).toEqual({
+			exitCode: 0,
+			stdout: "",
+			stderr: "",
+		});
+	});
+
+	it("#given non-string transcript path #when hook CLI runs #then it no-ops without stderr", async () => {
+		// given
+		const input = `${JSON.stringify({ ...postToolUseInput(), transcript_path: 42 })}\n`;
 
 		// when
 		const result = await runHookCli(input);
