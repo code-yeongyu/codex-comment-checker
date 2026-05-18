@@ -50,4 +50,3 @@ export declare function toHookInput(request: CommentCheckRequest, context: {
 export declare function isToolFailureOutput(text: string): boolean;
 export declare function parseApplyPatchRequests(patch: string, sourceToolName?: string): CommentCheckRequest[];
 export declare function isRecord(value: unknown): value is Record<string, unknown>;
-//# sourceMappingURL=core.d.ts.map

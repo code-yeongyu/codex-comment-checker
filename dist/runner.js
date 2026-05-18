@@ -82,7 +82,7 @@ function resolvePackageBinary(binaryName) {
     }
 }
 function isCommentCheckerPackage(value) {
-    return isRecord(value) && typeof value.getBinaryPath === "function";
+    return isRecord(value) && typeof value["getBinaryPath"] === "function";
 }
 function isRecord(value) {
     return typeof value === "object" && value !== null;
@@ -142,4 +142,3 @@ export function spawnProcess(command, args, stdin, maxOutputBytes = MAX_PROCESS_
         proc.stdin.end(stdin);
     });
 }
-//# sourceMappingURL=runner.js.map

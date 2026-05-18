@@ -8,4 +8,3 @@ else {
     process.stderr.write("Usage: codex-comment-checker hook post-tool-use\n");
     process.exitCode = 2;
 }
-//# sourceMappingURL=cli.js.map

@@ -11,11 +11,12 @@ export async function runCommentCheckerPostToolUse(input, options = {}) {
     const runner = options.run ?? runCommentChecker;
     const warnings = [];
     for (const request of requests) {
-        const result = await runner(toHookInput(request, {
+        const context = {
             sessionId: input.session_id,
             cwd: input.cwd,
-            transcriptPath: input.transcript_path ?? undefined,
-        }));
+            ...(input.transcript_path === null ? {} : { transcriptPath: input.transcript_path }),
+        };
+        const result = await runner(toHookInput(request, context));
         if (result.status === "missing" || result.status === "pass")
             continue;
         if (result.status === "error")
@@ -65,11 +66,11 @@ function toToolResultLike(input) {
     };
 }
 function normalizeToolInput(toolName, toolInput) {
-    if (toolName === "apply_patch" && typeof toolInput.command === "string") {
+    if (toolName === "apply_patch" && typeof toolInput["command"] === "string") {
         return {
             ...toolInput,
-            input: toolInput.command,
-            patch: toolInput.command,
+            input: toolInput["command"],
+            patch: toolInput["command"],
         };
     }
     return toolInput;
@@ -78,13 +79,13 @@ function normalizeToolResponse(toolResponse) {
     if (typeof toolResponse === "string") {
         return [{ type: "text", text: toolResponse }];
     }
-    if (isRecord(toolResponse) && typeof toolResponse.text === "string") {
-        return [{ type: "text", text: toolResponse.text }];
+    if (isRecord(toolResponse) && typeof toolResponse["text"] === "string") {
+        return [{ type: "text", text: toolResponse["text"] }];
     }
     return [];
 }
 function isErrorResponse(toolResponse) {
-    return isRecord(toolResponse) && toolResponse.is_error === true;
+    return isRecord(toolResponse) && toolResponse["is_error"] === true;
 }
 function formatWarnings(warnings) {
     return warnings
@@ -93,16 +94,16 @@ function formatWarnings(warnings) {
 }
 function isCodexPostToolUseInput(value) {
     return (isRecord(value) &&
-        value.hook_event_name === "PostToolUse" &&
-        typeof value.session_id === "string" &&
-        typeof value.turn_id === "string" &&
-        (typeof value.transcript_path === "string" || value.transcript_path === null) &&
-        typeof value.cwd === "string" &&
-        typeof value.model === "string" &&
-        typeof value.permission_mode === "string" &&
-        typeof value.tool_name === "string" &&
-        isRecord(value.tool_input) &&
-        typeof value.tool_use_id === "string");
+        value["hook_event_name"] === "PostToolUse" &&
+        typeof value["session_id"] === "string" &&
+        typeof value["turn_id"] === "string" &&
+        (typeof value["transcript_path"] === "string" || value["transcript_path"] === null) &&
+        typeof value["cwd"] === "string" &&
+        typeof value["model"] === "string" &&
+        typeof value["permission_mode"] === "string" &&
+        typeof value["tool_name"] === "string" &&
+        isRecord(value["tool_input"]) &&
+        typeof value["tool_use_id"] === "string");
 }
 function readStdin() {
     return new Promise((resolve, reject) => {
@@ -117,4 +118,3 @@ function readStdin() {
         });
     });
 }
-//# sourceMappingURL=codex-hook.js.map

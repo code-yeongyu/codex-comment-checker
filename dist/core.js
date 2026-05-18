@@ -68,7 +68,7 @@ function extractEditRequest(event) {
 }
 function extractMultiEditRequest(event) {
     const filePath = getString(event.input, ["filePath", "file_path", "path"]);
-    const edits = getEdits(event.input.edits);
+    const edits = getEdits(event.input["edits"]);
     if (!filePath || edits.length === 0)
         return [];
     return [
@@ -129,13 +129,15 @@ function extractApplyPatchMetadataRequests(details, sourceToolName) {
 function getApplyPatchMetadataFiles(details) {
     if (!isRecord(details))
         return [];
-    const direct = readApplyPatchMetadataFiles(details.files);
+    const direct = readApplyPatchMetadataFiles(details["files"]);
     if (direct.length > 0)
         return direct;
-    const result = isRecord(details.result) ? readApplyPatchMetadataFiles(details.result.files) : [];
+    const resultDetails = details["result"];
+    const result = isRecord(resultDetails) ? readApplyPatchMetadataFiles(resultDetails["files"]) : [];
     if (result.length > 0)
         return result;
-    const metadata = isRecord(details.metadata) ? readApplyPatchMetadataFiles(details.metadata.files) : [];
+    const metadataDetails = details["metadata"];
+    const metadata = isRecord(metadataDetails) ? readApplyPatchMetadataFiles(metadataDetails["files"]) : [];
     return metadata;
 }
 function readApplyPatchMetadataFiles(value) {
@@ -154,10 +156,10 @@ function readApplyPatchMetadataFiles(value) {
             continue;
         files.push({
             filePath,
-            movePath,
             before,
             after,
-            type,
+            ...(movePath === undefined ? {} : { movePath }),
+            ...(type === undefined ? {} : { type }),
         });
     }
     return files;
@@ -290,4 +292,3 @@ function joinPatchLines(lines) {
 export function isRecord(value) {
     return typeof value === "object" && value !== null;
 }
-//# sourceMappingURL=core.js.map

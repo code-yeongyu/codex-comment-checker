@@ -117,7 +117,7 @@ function resolvePackageBinary(binaryName: string): string | undefined {
 }
 
 function isCommentCheckerPackage(value: unknown): value is { getBinaryPath: () => string } {
-	return isRecord(value) && typeof value.getBinaryPath === "function";
+	return isRecord(value) && typeof value["getBinaryPath"] === "function";
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {

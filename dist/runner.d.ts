@@ -24,4 +24,3 @@ export type CommentCheckerRunner = (input: CommentCheckerHookInput) => Promise<C
 export declare function runCommentChecker(input: CommentCheckerHookInput, options?: RunCommentCheckerOptions): Promise<CommentCheckerRunResult>;
 export declare function resolveCommentCheckerBinary(): string | undefined;
 export declare function spawnProcess(command: string, args: string[], stdin: string, maxOutputBytes?: number): Promise<ProcessResult>;
-//# sourceMappingURL=runner.d.ts.map
