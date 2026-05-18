@@ -1,4 +1,5 @@
 import { spawn } from "node:child_process";
+import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
 import {
@@ -13,15 +14,13 @@ type CliResult = {
 	stderr: string;
 };
 
+const CLI_PATH = fileURLToPath(new URL("../dist/cli.js", import.meta.url));
+
 function runHookCli(input: string): Promise<CliResult> {
 	return new Promise((resolve, reject) => {
-		const child = spawn(
-			process.execPath,
-			[new URL("../dist/cli.js", import.meta.url).pathname, "hook", "post-tool-use"],
-			{
-				stdio: ["pipe", "pipe", "pipe"],
-			},
-		);
+		const child = spawn(process.execPath, [CLI_PATH, "hook", "post-tool-use"], {
+			stdio: ["pipe", "pipe", "pipe"],
+		});
 		let stdout = "";
 		let stderr = "";
 		child.stdout.setEncoding("utf8");
