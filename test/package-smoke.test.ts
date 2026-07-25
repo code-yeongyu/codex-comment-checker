@@ -57,7 +57,7 @@ describe("plugin package metadata", () => {
 
 		// then
 		expect(packageJson.type).toBe("module");
-		expect(packageJson.packageManager).toBe("npm@11.12.1");
+		expect(packageJson.packageManager).toBe("npm@12.0.1");
 		expect(packageJson.dependencies ?? {}).not.toHaveProperty("@code-yeongyu/comment-checker");
 		expect(packageJson.optionalDependencies).toHaveProperty("@code-yeongyu/comment-checker");
 		expect(packageJson.bin["codex-comment-checker"]).toBe("./dist/cli.js");
@@ -72,7 +72,7 @@ function isPackageJson(value: unknown): value is PackageJson {
 	const dependencies = value["dependencies"];
 	return (
 		value["type"] === "module" &&
-		value["packageManager"] === "npm@11.12.1" &&
+		value["packageManager"] === "npm@12.0.1" &&
 		isStringRecord(value["bin"]) &&
 		isStringRecord(value["optionalDependencies"]) &&
 		(dependencies === undefined || isRecord(dependencies))
