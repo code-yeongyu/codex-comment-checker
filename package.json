@@ -43,7 +43,7 @@
 		"check": "tsc --noEmit && biome check . && npm run build"
 	},
 	"optionalDependencies": {
-		"@code-yeongyu/comment-checker": "^0.8.0"
+		"@code-yeongyu/comment-checker": "^0.8.2"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.5.5",
